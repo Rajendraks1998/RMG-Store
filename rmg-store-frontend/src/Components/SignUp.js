@@ -1,5 +1,5 @@
-import { Box} from '@mui/material'
-import React from 'react';
+import { Box, TextField} from '@mui/material'
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 
 import Dialog from '@mui/material/Dialog';
@@ -9,15 +9,27 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 
-const SignUp = ({open,handleClickOpen,handleClose}) => {
-    
+const SignUp = ({open,handleClose,}) => {
+    const[user,setUser]=useState("");
+    const[password,setPassword]=useState("");
+    const[confirm,setConfirm]=useState("");
 
+    const handleSubmit =async()=>{
+        //await axios.post("http://localhost:8080/user/login",{username:user,password:password}).then((resp)=>console.log(resp.data)).catch((err)=>console.log(err))
+        // const message = await axios.get("http://localhost:8080/user/login").then((resp)=>console.log(resp.data));
+
+        console.log(user,password,confirm)
+        setUser("");
+        setPassword("");
+        setConfirm("");
+    }
     
   return (
     <div>
       <Box>
-        <Dialog open={open} onClick={handleClickOpen}>
+        <Dialog open={open}>
             <DialogTitle>
                 <Typography variant='h3'>
                     <center> SIGN UP</center>
@@ -36,23 +48,18 @@ const SignUp = ({open,handleClickOpen,handleClose}) => {
             </DialogTitle>
             <DialogContent dividers>
             <Typography gutterBottom>
-                Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                consectetur ac, vestibulum at eros.
+               <TextField type='text' variant='outlined' label="username" value={user} onChange={(e)=>setUser(e.target.value)}></TextField>
             </Typography>
             <Typography gutterBottom>
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-                Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
+            <TextField type='text' variant='outlined' label="password" value={password} onChange={(e)=>setPassword(e.target.value)}></TextField>
             </Typography>
             <Typography gutterBottom>
-                Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-                magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-                ullamcorper nulla non metus auctor fringilla.
+            <TextField type='text' variant='outlined' label="confirm password" value={confirm} onChange={(e)=>setConfirm(e.target.value)}></TextField>
             </Typography>
             </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={handleClose}>
-                    Save changes
+                <Button autoFocus onClick={handleSubmit}>
+                    Submit
                 </Button>
             </DialogActions>
         </Dialog>

@@ -1,37 +1,51 @@
-import Header from "./Components/Header";
-// import { BrowserRouter,Routes,Route } from "react-router-dom";
+// import Header from "./Components/Header";
+// // import { BrowserRouter,Routes,Route } from "react-router-dom";
 
-import { useState } from "react";
+// import { useState } from "react";
+import { Button } from "@mui/material";
 import SignUp from "./Components/SignUp";
-import SignIn from "./Components/SignIn";
+import { useState } from "react";
+// import SignIn from "./Components/SignIn";
 
 function App() {
-  const [open, setOpen] = useState(false);
-  const [Headers,setHeaders]=useState(true);
+  // const [open, setOpen] = useState(false);
+  // const [Headers,setHeaders]=useState(true);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    setHeaders(false);
-  };
-  const handleClose = () => {
-    setOpen(false);
-    setHeaders(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  //   setHeaders(false);
+  // };
+  // const handleClose = () => {
+  //   setOpen(false);
+  //   setHeaders(true);
+  // };
 
-  const [up,setUp]=useState(false);
-  const [sin,setSin]=useState(false);
+  // const [up,setUp]=useState(false);
+  // const [sin,setSin]=useState(false);
   
-  const HandleClickIn =()=>{
-    setOpen(true);
+  // const HandleClickIn =()=>{
+  //   setOpen(true);
     
-  }
-  const HandleClickUp =()=>{
-    setUp(true);
-  }
+  // }
+  // const HandleClickUp =()=>{
+  //   setUp(true);
+  // }
+  const[open,setOpen]=useState(false);
+
+    const handleClickOpen =()=>{
+        setOpen(true)
+    }
+
+    const handleClose =()=>{
+        setOpen(false)
+    }
 
   
   return (
+
     <div className="App">
+      <Button variant="contained" onClick={handleClickOpen}>Open sign up</Button>
+      <SignUp open={open} handleClose={handleClose}/>
     {/* <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header/>}></Route>
@@ -39,7 +53,7 @@ function App() {
           <Route path="/signup" element={<SignUp open={open} handleClickOpen={handleClickOpen} handleClose={handleClose}/>}></Route>
         </Routes>
     </BrowserRouter> */}
-    {
+    {/* {
       Headers && <Header HandleClickIn={HandleClickIn} HandleClickUp={HandleClickUp}/>
     }
     <div>
@@ -49,7 +63,7 @@ function App() {
       {
         sin && <SignIn></SignIn>
       }
-    </div>
+    </div> */}
     </div>
   );
 }
