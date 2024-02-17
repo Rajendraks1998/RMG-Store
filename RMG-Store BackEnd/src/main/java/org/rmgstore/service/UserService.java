@@ -2,7 +2,10 @@ package org.rmgstore.service;
 
 import org.rmgstore.model.User;
 
+import java.util.List;
+
 public interface UserService {
-    String login(User user);
+    User login(User user);
     User save (User user);
+    List<User> findAll();
 }

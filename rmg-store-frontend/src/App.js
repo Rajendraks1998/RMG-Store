@@ -31,6 +31,7 @@ function App() {
   //   setUp(true);
   // }
   const[open,setOpen]=useState(false);
+  const[data,setData]=useState([]);
 
     const handleClickOpen =()=>{
         setOpen(true)
@@ -40,12 +41,28 @@ function App() {
         setOpen(false)
     }
 
+    console.log(data)
   
   return (
 
     <div className="App">
       <Button variant="contained" onClick={handleClickOpen}>Open sign up</Button>
-      <SignUp open={open} handleClose={handleClose}/>
+      {data.map((item,i)=>{
+        return(
+          <div key={i}>
+            <h1>{item.map((item)=>{
+              return (
+                <div>
+                  <h3>{item.id}</h3>
+                <h3>{item.name}</h3>
+                </div>
+                
+              )
+            })}</h1>
+          </div>
+        )
+      })}
+      <SignUp open={open} handleClose={handleClose} data={data} setData={setData} setOpen={setOpen}/>
     {/* <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header/>}></Route>

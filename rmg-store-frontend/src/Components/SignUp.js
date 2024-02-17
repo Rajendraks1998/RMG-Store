@@ -11,20 +11,25 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 
-const SignUp = ({open,handleClose,}) => {
+const SignUp = ({open,handleClose,setData,data,setOpen}) => {
     const[user,setUser]=useState("");
     const[password,setPassword]=useState("");
     const[confirm,setConfirm]=useState("");
 
-    const handleSubmit =async()=>{
-        //await axios.post("http://localhost:8080/user/login",{username:user,password:password}).then((resp)=>console.log(resp.data)).catch((err)=>console.log(err))
-        // const message = await axios.get("http://localhost:8080/user/login").then((resp)=>console.log(resp.data));
+    
+    var[message,setMessage]=useState([])
 
-        console.log(user,password,confirm)
+    const handleSubmit =async()=>{
+        // await axios.post("http://localhost:8080/user/login",{name:user,password:password})
+        // .then((resp)=>setMessage((resp)))
+        // .catch(err=>setMessage([err]))
+        await axios.get("http://localhost:8080/user/findall").then((resp)=>setData([resp.data])).catch((err)=>setData([err]))
         setUser("");
         setPassword("");
         setConfirm("");
+        setOpen(false);
     }
+    // console.log(data);
     
   return (
     <div>
