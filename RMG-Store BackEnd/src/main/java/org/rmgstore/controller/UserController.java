@@ -1,12 +1,13 @@
 package org.rmgstore.controller;
 
+import org.rmgstore.dto.UserDto;
+import org.rmgstore.enums.ConstantsEnum;
 import org.rmgstore.model.User;
 import org.rmgstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -19,23 +20,37 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user){
-        User user1 = userService.login(user);
+    public ResponseEntity<String> login(@RequestBody UserDto userDto){
+        User user1 = userService.login(userDto);
         if(user1!=null)
             return new ResponseEntity<>("User Logged in Successfully",HttpStatus.OK);
         else
             return new ResponseEntity<>("Please check the credentials",HttpStatus.NOT_FOUND);
     }
-    @GetMapping("/save")
-    public String save(@RequestBody User user){
-        User user1 = userService.save(user);
-        if(user1!=null)
-            return "User created Successfully";
-        return "User not created";
+    @PostMapping("/add")
+    public ResponseEntity<String> add(@RequestBody User user){
+        String existingUser = userService.validateUser(user);
+        if(existingUser == null){
+            userService.add(user);
+            return new ResponseEntity<>(ConstantsEnum.USER_CREATED_SUCCESSFULLY.getValue(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(existingUser, HttpStatus.NOT_FOUND);
     }
-
-    @GetMapping("/findall")
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@RequestBody User user){
+        String result = userService.update(user);
+        if(result.equals(ConstantsEnum.USER_UPDATED_SUCCESSFULLY.getValue()))
+            return new ResponseEntity<>(result,HttpStatus.OK);
+        else
+            return new ResponseEntity<>(result,HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/findAll")
     public List<User> findAll(){
         return userService.findAll();
     }
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long userId){
+        return userService.delete(userId);
+    }
+
 }

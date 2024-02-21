@@ -1,0 +1,30 @@
+Admin --> 
+	1. add,delete,update - Products
+	2. add,delete,update - Users
+Users -->
+	1. signup
+	2. login
+	3. billing
+	
+Database Tables:
+
+	1. Product -->
+		Long id;
+		User userId;(One to many mapping)
+		String name;
+		int quantity;
+		double price;
+	2. Users -->
+		Long id;
+		String name;
+		String store;
+		String address;
+		Long contact;
+		String password;
+	3. Billing -->
+		Long id;
+		User userId;(one to many mapping)
+		DateTime billingTime;
+		List<Product> products;
+		int noProducts;
+		double total;
