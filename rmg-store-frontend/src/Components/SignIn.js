@@ -10,6 +10,8 @@ const SignIn = () => {
   const [open, setOpen] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
 
+  const win = window.sessionStorage;
+
   let history = useNavigate();
 
   const url = "http://localhost:8080/user/login";

@@ -1,6 +1,7 @@
 // import { DeleteOutline} from '@mui/icons-material'
 // import { Avatar, Card, CardContent, CardHeader, IconButton, Typography } from '@mui/material'
 // import { deepPurple } from '@mui/material/colors'
+import { Box, Container, Divider, Paper, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 // import { red,blue } from '@mui/material/colors';
@@ -8,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 const Home = () => {
 
   const[datas,setDatas]=useState([])
+  const show = false;
   // const[show,setShow]=useState(false)
   // const[color,setColor]=useState(blue)
 
@@ -46,7 +48,8 @@ const Home = () => {
   // }
 
  return (
-  <div style={{display:'flex',flexWrap: 'wrap',}}>
+  // <div style={{display:'flex',flexWrap: 'wrap',}}>
+  <div>
     {/* {datas.map((item,i) =>{
       return(
       <Card sx={{width:325,margin:2}} key={item.id} onMouseOver={HandleOver} onMouseOut={HandleOut}>
@@ -65,6 +68,44 @@ const Home = () => {
       </Card>
       )
     })} */}
+    <div>
+      <Box fullWidth>
+        <Paper elevation={3} sx={{ height: 350, overflow: "hidden" }}>
+          <Container sx={{ marginTop: 3 }}>
+            <Typography variant='h4'>
+              User Details
+            </Typography>
+            <Divider></Divider>
+            <br/>
+            <Typography variant='h6'>
+              UserName : 
+            </Typography>
+            <Divider></Divider>
+            <Typography variant='h6'>
+              StoreName : 
+            </Typography>
+            <Divider></Divider>
+            <Typography variant='h6'>
+              Address :
+            </Typography>
+            <Divider></Divider>
+            <Typography variant='h6'>
+              Email ID : 
+            </Typography>
+            <Divider></Divider>
+            <Typography variant='h6'>
+              Contact :
+            </Typography>
+            {
+              show && <p>Password :</p>
+            }
+
+            
+
+          </Container>
+        </Paper>
+      </Box>
+    </div>
   </div>
  )
 }

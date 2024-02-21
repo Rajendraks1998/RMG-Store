@@ -1,0 +1,2541 @@
+add.js
+
+
+import { Box, Button, Container, Divider, Paper, TextField, Typography } from '@mui/material';
+
+import axios from 'axios';
+
+import { useFormik } from 'formik';
+
+import React from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+
+const Add = () => {
+
+
+
+ const Dates = new Date().toString()
+
+
+
+ const split = Dates.split(" ")
+
+
+
+ const Day = split[0]
+
+ const Month = split[1]
+
+ const dates = split[2]
+
+ const year = split[3]
+
+ const time = split[4]
+
+
+
+ const conncatDate = Month + " " + dates + " " + year 
+
+ const conncatTime = Day + " " + time
+
+
+
+
+
+ const history = useNavigate()
+
+
+
+ const formik = useFormik({
+
+  initialValues:{
+
+   username:"",
+
+   password:"",
+
+   content:""
+
+  },
+
+  onSubmit:()=>{
+
+   formik.resetForm()
+
+
+
+   const {username,password,content} = formik.values
+
+
+
+   axios.post("http://localhost:8000/posts",{username:username,password:password,content:content,date:conncatDate,time:conncatTime})
+
+   .then((resp)=>console.log(resp.data))
+
+
+
+   history("/Home")
+
+
+
+  },
+
+  validate:(values)=>{
+
+   let errors = {}
+
+   if(!values.username){
+
+    errors.username = "username is required"
+
+   }
+
+   if(!values.password){
+
+    errors.password = "password is required"
+
+   }
+
+   if(!values.content){
+
+    errors.content = "content is required"
+
+   }
+
+   return errors;
+
+  }
+
+   
+
+ })
+
+ // const[inputs,setInputs]=useState({
+
+ // username:"",
+
+ // password:"",
+
+ // content:""
+
+ // })
+
+
+
+
+
+ // const HandleChange =(e)=>{
+
+ // let name = e.target.name
+
+ // let value = e.target.value
+
+
+
+ // setInputs({
+
+ // ...inputs,
+
+ // [name]:value
+
+ // })
+
+ // }
+
+
+
+ // const HandleSubmit =(e)=>{
+
+ // e.preventDefault()
+
+
+
+  // axios.post("http://localhost:8000/posts",{username:inputs.username,password:inputs.password,content:inputs.content,date:conncatDate,time:conncatTime})
+
+  // .then((resp)=>console.log(resp.data))
+
+
+
+  // history("/Home")
+
+ // }
+
+
+
+
+
+ return (
+
+  <div>
+
+   <center>
+
+    <Box sx={{width:800}}>
+
+    
+
+     <Paper elevation={3} >
+
+      <Box sx={{width:600}}>
+
+       <Container>
+
+        <center>
+
+        <Typography variant='h2'>
+
+          Add
+
+        </Typography>
+
+        </center>
+
+        <Divider></Divider>
+
+        <form autoComplete='off' onSubmit={formik.handleSubmit}>
+
+         <TextField 
+
+          type='text' 
+
+          label="Username" 
+
+          margin='dense' 
+
+          fullWidth
+
+          name='username'
+
+          value={formik.values.username}
+
+          onChange={formik.handleChange}
+
+         />
+
+         {formik.errors.username ? <Typography variant='body1' color='error'>{formik.errors.username}</Typography>:null}
+
+         <br/>
+
+         <TextField 
+
+          type='text' 
+
+          label="Password" 
+
+          margin='dense' 
+
+          fullWidth
+
+          name='password'
+
+          value={formik.values.password}
+
+          onChange={formik.handleChange}
+
+         />
+
+         {formik.errors.password ? <Typography variant='body1' color='error'>{formik.errors.password}</Typography>:null}
+
+         <br/>
+
+         <TextField 
+
+          type='text' 
+
+          label="Content" 
+
+          margin='dense' 
+
+          fullWidth 
+
+          multiline rows={4}
+
+          name='content'
+
+          value={formik.values.content}
+
+          onChange={formik.handleChange}
+
+         />
+
+         {formik.errors.content ? <Typography variant='body1' color='error'>{formik.errors.content}</Typography>:null}
+
+         <br/><br/>
+
+         <Button
+
+          type='submit' 
+
+          variant='contained' 
+
+          color='primary' 
+
+          sx={{width:100,marginBottom:2,height:40}}>
+
+            Submit
+
+         </Button>
+
+        </form>
+
+       </Container>
+
+      </Box>
+
+     </Paper>
+
+      
+
+    </Box>
+
+   </center>
+
+  </div>
+
+ )
+
+}
+
+
+
+export default Add;
+
+
+
+
+
+2, Crud app
+
+
+
+import React, { useEffect, useState } from 'react';
+
+import Table from '@mui/material/Table';
+
+import TableBody from '@mui/material/TableBody';
+
+import TableCell from '@mui/material/TableCell';
+
+import TableContainer from '@mui/material/TableContainer';
+
+import TableHead from '@mui/material/TableHead';
+
+import TableRow from '@mui/material/TableRow';
+
+import Paper from '@mui/material/Paper';
+
+import TextField from '@mui/material/TextField';
+
+import Button from '@mui/material/Button';
+
+import axios from 'axios';
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import EditIcon from '@mui/icons-material/Edit';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import Modal from './Modal';
+
+import { Tooltip } from '@mui/material';
+
+import ModelTwo from './ModelTwo';
+
+import Checkbox from '@mui/material/Checkbox';
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+
+
+
+
+
+
+
+const CrudApp = () => {
+
+ const[open,setOpen]=useState(false)
+
+ const[show,setShow]=useState(false)
+
+ const[open1,setOpen1]=useState(false)
+
+ const[show1,setShow1]=useState(false)
+
+ const[view,setView]=useState([])
+
+ const[user,setuser]=useState("")
+
+ const[password,setPassword]=useState("")
+
+ const[content,setContent]=useState("")
+
+ const[id,setId]=useState(0)
+
+ const[date,setDate]=useState("")
+
+ const[time,setTime]=useState("")
+
+ const[checked,setChecked]=useState(false)
+
+ const[disable,setDisable]=useState(true)
+
+  
+
+  
+
+ const update =(data)=>{
+
+  setuser(data.username)
+
+  setPassword(data.password)
+
+  setContent(data.content)
+
+  setDate(data.date)
+
+  setTime(data.time)
+
+ }
+
+
+
+ const HandleOpen =(id)=>{
+
+  setOpen(true)
+
+  setShow(true)
+
+
+
+  axios.get(`http://localhost:8000/posts/${id}`)
+
+  .then((resp)=>setView([resp.data]))
+
+ }
+
+
+
+ const HandleDelete =async(id)=>{
+
+  await axios.delete(`http://localhost:8000/posts/${id}`)
+
+  .then((resp)=>console.log(resp.data))
+
+  data()
+
+ }
+
+
+
+ const HandleEdit =(id)=>{
+
+  setOpen1(true)
+
+  setShow1(true)
+
+
+
+  axios.get(`http://localhost:8000/posts/${id}`)
+
+  .then((resp)=>update(resp.data))
+
+  .catch((err)=>console.log(err))
+
+
+
+  setId(id)
+
+   
+
+ }
+
+
+
+ const HandleChangeCheck =(item,e)=>{
+
+  setChecked(e.target.checked)
+
+  if(checked === true){
+
+   setDisable(true)
+
+  }else{
+
+   setDisable(false)
+
+  }
+
+  console.log(item)
+
+ }
+
+
+
+  
+
+  
+
+
+
+ const[search,setSearch]=useState({
+
+  username : "",
+
+  password: "",
+
+  content:""
+
+ })
+
+
+
+ const[Data,setData]=useState([])
+
+
+
+
+
+ const HandleChange =(e)=>{
+
+  const {name,value} = e.target;
+
+
+
+  setSearch({
+
+   [name]:value
+
+  })
+
+ }
+
+
+
+
+
+ const data =async()=>{
+
+  await axios.get("http://localhost:8000/posts")
+
+  .then((resp)=>setData(resp.data))
+
+ }
+
+
+
+ useEffect(()=>{
+
+   data()
+
+ },[])
+
+
+
+ 
+
+  
+
+
+
+ return (
+
+
+
+   
+
+  <div>
+
+
+
+   
+
+   <TextField variant='outlined' autoComplete='off' name='username' value={search.username} onChange={HandleChange} placeholder='Search UserName'></TextField><span> </span><span> </span><span> </span>
+
+   <TextField variant='outlined' autoComplete='off' name='password' value={search.password} onChange={HandleChange} placeholder='Search Password'></TextField><span> </span><span> </span><span> </span>
+
+   <TextField variant='outlined' autoComplete='off' name='content' value={search.content} onChange={HandleChange} placeholder='Search Content'></TextField><span> </span><span> </span><span> </span>
+
+   <br/><br/>
+
+   {checked && <Button variant="contained">Delete All</Button>}
+
+   {checked && <br/>}
+
+   {checked && <br/>}
+
+   <div>
+
+    <TableContainer component={Paper}>
+
+     <Table>
+
+      <TableHead>
+
+       <TableRow>
+
+        <TableCell align='center'><FormControlLabel control={<Checkbox checked={checked} onChange={(e)=>HandleChangeCheck(checked?'no Data':Data.map((item)=>item),e)}/>}/></TableCell>
+
+        <TableCell align='center'>UserName</TableCell>
+
+        <TableCell align='center'>Password</TableCell>
+
+        <TableCell align='center'>Content</TableCell>
+
+        <TableCell align='center'>Date</TableCell>
+
+        <TableCell align='center'>Actions</TableCell>
+
+       </TableRow>
+
+      </TableHead>
+
+      <TableBody>
+
+       {
+
+        Data.filter((item)=>{
+
+         if(search.username === ""){
+
+          return item
+
+         }
+
+         else if(item.username.includes(search.username)){
+
+          return item.username
+
+         }
+
+        }).map((item)=>{
+
+         return (
+
+          <TableRow>
+
+           <TableCell align='center'>
+
+            <FormControlLabel control={<Checkbox checked={checked} disabled={disable}/>}/>
+
+           </TableCell>
+
+           <TableCell align='center'>{item.username}</TableCell>
+
+           <TableCell align='center'>{item.password}</TableCell>
+
+           <TableCell align='center'>{item.content}</TableCell>
+
+           <TableCell align='center'>{item.date}</TableCell>
+
+           <TableCell align='center'>
+
+            <Tooltip title="View">
+
+             <Button variant='contained' onClick={()=>HandleOpen(item.id)}><VisibilityIcon/></Button>
+
+            </Tooltip><span> </span>
+
+            <Tooltip title="Edit">
+
+             <Button variant='contained' onClick={()=>HandleEdit(item.id)}><EditIcon/></Button>
+
+            </Tooltip><span> </span>
+
+            <Tooltip title="Delete">
+
+             <Button variant='contained' onClick={()=>HandleDelete(item.id)}><DeleteIcon/></Button>
+
+            </Tooltip>
+
+           </TableCell>
+
+          </TableRow>
+
+         )
+
+        })
+
+       }
+
+        
+
+      </TableBody>
+
+     </Table>
+
+    </TableContainer>
+
+    {
+
+     show && 
+
+     <Modal open={open} setOpen={setOpen} view={view} />
+
+    }
+
+    {
+
+     show1 && 
+
+     <ModelTwo 
+
+      open1={open1} 
+
+      setOpen1={setOpen1} 
+
+      user={user} setUser={setuser} 
+
+      password={password} setPassword={setPassword}
+
+      content={content} setContent={setContent}
+
+      id={id}
+
+      data={data}
+
+      time={time}
+
+      date={date}
+
+      />
+
+    }
+
+     
+
+   </div>
+
+  </div>
+
+ )
+
+}
+
+
+
+export default CrudApp
+
+
+
+3, Home 
+
+
+
+import { DeleteOutline} from '@mui/icons-material'
+
+import { Avatar, Card, CardContent, CardHeader, IconButton, Typography } from '@mui/material'
+
+import { deepPurple } from '@mui/material/colors'
+
+import axios from 'axios';
+
+import React, { useEffect, useState } from 'react';
+
+import { red,blue } from '@mui/material/colors';
+
+
+
+
+
+
+
+
+
+const Home = () => {
+
+
+
+   
+
+   
+
+  const[datas,setDatas]=useState([])
+
+   
+
+  const[show,setShow]=useState(false)
+
+  const[color,setColor]=useState(blue)
+
+
+
+   
+
+
+
+  const data =async()=>{
+
+    await axios.get("http://localhost:8000/posts")
+
+    .then((resp)=>setDatas(resp.data))
+
+  }
+
+
+
+  useEffect(()=>{
+
+    data()
+
+  },[])
+
+
+
+  const HandleDelete =async(id)=>{
+
+    await axios.delete(`http://localhost:8000/posts/${id}`)
+
+    .then((resp)=>console.log(resp.data))
+
+
+
+    await axios.get("http://localhost:8000/posts")
+
+    .then((resp)=>setDatas(resp.data))
+
+
+
+     
+
+  }
+
+
+
+  const HandleOver =()=>{
+
+    setShow(true)
+
+    
+
+  }
+
+
+
+  const HandleOut =()=>{
+
+    setShow(false)
+
+  }
+
+
+
+  const HandleColorOver =()=>{
+
+    setColor(red) 
+
+  }
+
+
+
+  const HandleColorOut =()=>{
+
+    setColor(blue) 
+
+  }
+
+
+
+  
+
+   
+
+ return (
+
+  <div style={{display:'flex',flexWrap: 'wrap',}}>
+
+    {datas.map((item,i) =>{
+
+      return(
+
+         
+
+      <Card sx={{width:325,margin:2}} key={item.id} onMouseOver={HandleOver} onMouseOut={HandleOut}>
+
+        <CardHeader 
+
+          title={<Typography variant='h5'>{item.username}</Typography>} 
+
+          avatar={<Avatar sx={{ bgcolor: deepPurple[500] }}>{item.username[0]}</Avatar>}
+
+          subheader={item.date + `,${item.time}`}
+
+           
+
+          action={ show && <IconButton onClick={()=>HandleDelete(item.id)} onMouseOver={HandleColorOver} onMouseOut={HandleColorOut}><DeleteOutline sx={{ color: `${color[400]}` }}/></IconButton>}
+
+        >
+
+        </CardHeader>
+
+        <CardContent>
+
+          <Typography variant='body1'>
+
+            {item.content}
+
+          </Typography>
+
+        </CardContent>
+
+      </Card>
+
+      )
+
+    })}
+
+  </div>
+
+ )
+
+}
+
+
+
+export default Home;
+
+
+
+4, Home nav
+
+
+
+import { AppBar, Button, IconButton, Menu, Toolbar, Typography } from '@mui/material';
+
+import React, { useState } from 'react';
+
+import {
+
+  Route,
+
+  Routes,
+
+  BrowserRouter
+
+ } from "react-router-dom";
+
+ import Navbar from "./Navbar";
+
+ import About from "./About";
+
+ import CrudApp from "./CrudApp";
+
+ import Home from "./Home";
+
+ import Timer from "./Timer";
+
+ import Add from "./Add";
+
+import SignIn from './SignIn';
+
+import SignOut from './SignOut';
+
+import View from './View';
+
+import { set } from 'react-hook-form';
+
+
+
+
+
+const HomeNav = ({setImg}) => {
+
+  const[show,setShow]=useState(false)
+
+  const[show1,setShow1]=useState(true)
+
+  const[sin,setSin]=useState(false)
+
+  const[sou,setSou]=useState(false)
+
+  const[opens,setOpens]=useState(true)
+
+  const[opens1,setOpens1]=useState(true)
+
+
+
+  const HandleSignIn =()=>{
+
+    setSin(true)
+
+    setOpens(true)
+
+    setImg(false)
+
+     
+
+  }
+
+
+
+  const HandleSignOut =()=>{
+
+    setSou(true)
+
+    setOpens1(true)
+
+  }
+
+  return (
+
+    <div>
+
+      {
+
+        show1 && 
+
+        <AppBar position="static">
+
+          <Toolbar>
+
+
+
+            <IconButton
+
+              size="large"
+
+              edge="start"
+
+              color="inherit"
+
+              aria-label="menu"
+
+              sx={{ mr: 2 }}
+
+              title='icon1'
+
+            >
+
+              <Menu />
+
+            </IconButton>
+
+
+
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+
+              MY APP
+
+            </Typography>
+
+            <Button color="inherit" onClick={HandleSignIn}>SIGN IN</Button>
+
+            <Button color="inherit" onClick={HandleSignOut}>SIGN UP</Button>
+
+          </Toolbar>
+
+        </AppBar>
+
+      }
+
+       
+
+      <div>
+
+        {
+
+          sin && <SignIn opens={opens} setOpens={setOpens} setShow1={setShow1} setShow={setShow} />
+
+        }
+
+      </div>
+
+      <div>
+
+        {
+
+          sou && <SignOut opens1={opens1} setOpens1={setOpens1}/>
+
+        }
+
+      </div>
+
+      <div>
+
+      {
+
+        show && 
+
+        <BrowserRouter>
+
+          <Navbar setShow={setShow} setShow1={setShow1} setImg={setImg}>
+
+          <Routes>
+
+            {/* <Route exact path="/" element={<Navbar/>}></Route> */}
+
+            <Route path="Home" element={<Home />} />
+
+            <Route path="Timer" element={<Timer />} />
+
+            <Route path="About" element={<About />} />
+
+            <Route path="CrudApp" element={<CrudApp />} />
+
+            <Route path="Add" element={<Add />} />
+
+            <Route path='view' element={<View/>}></Route>
+
+             
+
+          </Routes>
+
+          </Navbar>
+
+        </BrowserRouter>
+
+      }
+
+      </div>
+
+    </div>
+
+  )
+
+}
+
+
+
+export default HomeNav;
+
+
+
+5, Modal
+
+
+
+import React from 'react';
+
+import Dialog from '@mui/material/Dialog';
+
+import DialogContent from '@mui/material/DialogContent';
+
+import DialogContentText from '@mui/material/DialogContentText';
+
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { Button, DialogActions, IconButton, Typography } from '@mui/material';
+
+import { Close } from '@mui/icons-material';
+
+
+
+const Modal = ({open,setOpen,view}) => {
+
+   
+
+  const HandleClose =()=>{
+
+    setOpen(false)
+
+  }
+
+ return (
+
+  <div>
+
+   {view.map((item)=>{
+
+    return (
+
+      <Dialog open={open} maxWidth={'xs'} onClose={HandleClose} fullWidth>
+
+        <DialogTitle>
+
+          Details of : <span> </span>
+
+          {item.username.toUpperCase()}
+
+        </DialogTitle>
+
+        <IconButton
+
+          aria-label="close"
+
+          onClick={HandleClose}
+
+          sx={{
+
+            position: 'absolute',
+
+            right: 10,
+
+            top: 10,
+
+          }}
+
+        >
+
+          <Close/>
+
+        </IconButton>
+
+        <DialogContent dividers>
+
+          <DialogContentText>
+
+            <Typography variant='h5'>UserName: {item.username}</Typography>
+
+            <Typography variant='h5'>Password: {item.password}</Typography>
+
+            <Typography variant='h5'>Content: {item.content}</Typography>
+
+            <Typography variant='h5'>Date: {item.date}</Typography>
+
+            <Typography variant='h5'>Timings: {item.time}</Typography>
+
+          </DialogContentText>
+
+        </DialogContent>
+
+        <DialogActions dividers>
+
+          <Button onClick={HandleClose} variant='contained'>Close</Button>
+
+        </DialogActions>
+
+      </Dialog>
+
+    )
+
+   })}
+
+  </div>
+
+ )
+
+}
+
+
+
+export default Modal
+
+
+
+6, Modal two
+
+
+
+import React from 'react';
+
+import Dialog from '@mui/material/Dialog';
+
+import DialogContent from '@mui/material/DialogContent';
+
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { Button, DialogActions, IconButton, TextField,} from '@mui/material';
+
+import { Close } from '@mui/icons-material';
+
+import axios from 'axios';
+
+
+
+const ModelTwo = ({
+
+  open1,setOpen1,
+
+  user,setUser,
+
+  password,setPassword,
+
+  content,setContent,id,data,
+
+  date,time
+
+}) => {
+
+
+
+   
+
+  const HandleClose =()=>{
+
+    setOpen1(false)
+
+     
+
+  }
+
+
+
+  const HandleUpdate =async()=>{
+
+    await axios.put(`http://localhost:8000/posts/${id}`,{username:user,password,content,date,time})
+
+    .then((resp)=>console.log(resp.data))
+
+    .catch((err)=>console.log(err))
+
+    data()
+
+    setOpen1(false)
+
+  }
+
+   
+
+  // console.log(user,password,content)
+
+ return (
+
+  <div>
+
+    
+
+     
+
+      <Dialog open={open1} maxWidth={'xs'} onClose={HandleClose} fullWidth>
+
+        <DialogTitle>
+
+          Details of : <span>{user}</span>
+
+        </DialogTitle>
+
+        <IconButton
+
+          aria-label="close"
+
+          onClick={HandleClose}
+
+          sx={{
+
+            position: 'absolute',
+
+            right: 10,
+
+            top: 10,
+
+          }}
+
+        >
+
+          <Close/>
+
+        </IconButton>
+
+        <DialogContent dividers>
+
+          <TextField 
+
+            type='text' 
+
+            value={user} 
+
+            onChange={(e)=>setUser(e.target.value)}
+
+            margin='dense'
+
+            fullWidth
+
+            label="Username"
+
+          >
+
+
+
+          </TextField><br/>
+
+          <TextField 
+
+            type='text' 
+
+            value={password} 
+
+            onChange={(e)=>setPassword(e.target.value)}
+
+            margin='dense'
+
+            fullWidth
+
+            label="Password"
+
+          >
+
+
+
+          </TextField><br/>
+
+          <TextField 
+
+            type='text' 
+
+            value={content} 
+
+            onChange={(e)=>setContent(e.target.value)}
+
+            margin='dense'
+
+            fullWidth
+
+            label="Content"
+
+          >
+
+
+
+          </TextField>
+
+        </DialogContent>
+
+        <DialogActions dividers>
+
+          <Button onClick={HandleUpdate} variant='contained'>Update</Button>
+
+        </DialogActions>
+
+      </Dialog>
+
+     
+
+  </div>
+
+ )
+
+}
+
+
+
+
+
+export default ModelTwo
+
+
+
+7, Navbar
+
+
+
+import React, { useState } from 'react';
+
+import { NavLink,} from 'react-router-dom';
+
+import { AppBar, Box, Button, Container, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors } from '@mui/material';
+
+import { Add, Home, Menu } from '@mui/icons-material';
+
+import InfoIcon from '@mui/icons-material/Info';
+
+import AppsIcon from '@mui/icons-material/Apps';
+
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+
+import { useNavigate } from 'react-router-dom';
+
+import image from "../Images/logo2.jpeg";
+
+
+
+
+
+const Navbar = ({children,setShow,setShow1,setImg}) => {
+
+  const[icon1,setIcon1]=useState(true)
+
+  const[icon2,setIcon2]=useState(false)
+
+  const[width,setWidth]=useState(60)
+
+   
+
+
+
+  let history = useNavigate()
+
+
+
+  const HandleIcon =(path)=>{
+
+   history(`/${path}`)
+
+  }
+
+
+
+  const HandleListItem =(path)=>{
+
+   history(`/${path}`)
+
+    
+
+  }
+
+
+
+  // window.location.reload(history("/"));
+
+   
+
+  const MenuItem = [
+
+    {
+
+      name:"Home",
+
+      path:"Home",
+
+      icon:<Home color="primary"/>,
+
+      title:"To Home Page"
+
+    },
+
+    {
+
+     name:"Add",
+
+     path:"Add",
+
+     icon:<Add color="primary" />,
+
+     title:"To Add Page"
+
+    },
+
+    {
+
+      name:"Timer",
+
+      path:"Timer",
+
+      icon:<AccessTimeFilledIcon color="primary" />,
+
+      title:"To Timer Page"
+
+    },
+
+    {
+
+      name:"CrudApp",
+
+      path:"CrudApp",
+
+      icon:<AppsIcon color="primary"/>,
+
+      title:"To CrudApp Page"
+
+    },
+
+    {
+
+      name:"About",
+
+      path:"About",
+
+      icon:<InfoIcon color="primary"/>,
+
+      title:"To About Page"
+
+    }
+
+  ]
+
+
+
+  const HandleDrawer =()=>{
+
+    setWidth(170)
+
+    setIcon1(false)
+
+    setIcon2(true)
+
+  }
+
+  const HandleDrawer1 =()=>{
+
+    setWidth(60)
+
+    setIcon1(true)
+
+    setIcon2(false)
+
+  }
+
+
+
+  // const HandleOver =()=>{
+
+  // setWidth(170)
+
+  // }
+
+
+
+  // const HandleOut =()=>{
+
+  // setWidth(60)
+
+  // }
+
+
+
+  const HandleClick =()=>{
+
+   history("/")
+
+   setShow(false)
+
+   setShow1(true)
+
+   setImg(true)
+
+  }
+
+
+
+   
+
+ return (
+
+  <div style={{display:'flex'}}>
+
+    
+
+   <Drawer
+
+    sx={{
+
+     width: width,
+
+     flexShrink: 0,
+
+     '& .MuiDrawer-paper': {
+
+      width: width,
+
+      boxSizing: 'border-box',
+
+     },
+
+    }}
+
+    variant="permanent"
+
+    anchor="left"
+
+    
+
+
+
+   >
+
+    <img src={image} alt='logo' width={width} height={63}></img>
+
+    <Divider sx={{marginTop:0}}>
+
+    </Divider>
+
+    {/* onMouseOver={HandleOver} onMouseOut={HandleOut} */}
+
+    <List >
+
+     {MenuItem.map((text,i) => (
+
+      <ListItem key={i} disablePadding onClick={()=>HandleListItem(text.path)} >
+
+       <ListItemButton title={text.title}>
+
+        <Tooltip title={text.name}>
+
+         <ListItemIcon onClick={()=>HandleIcon(text.path)}>
+
+          {text.icon}
+
+         </ListItemIcon>
+
+        </Tooltip>
+
+        <ListItemText primary={<NavLink className={({isActive})=>{return isActive ? colors.pink : colors.red
+
+        }} to={text.path}>{text.name}</NavLink>} />
+
+       </ListItemButton>
+
+      </ListItem>
+
+     ))}
+
+    </List>
+
+   </Drawer>
+
+
+
+   <Box sx={{ flexGrow: 1 }}>
+
+   <AppBar position="static">
+
+    <Toolbar>
+
+     {icon1 && 
+
+     <IconButton
+
+      size="large"
+
+      edge="start"
+
+      color="inherit"
+
+      aria-label="menu"
+
+      sx={{ mr: 2 }}
+
+      onClick={HandleDrawer}
+
+      title='icon1'
+
+     >
+
+      <Menu />
+
+     </IconButton>}
+
+     {icon2 && 
+
+     <IconButton
+
+      size="large"
+
+      edge="start"
+
+      color="inherit"
+
+      aria-label="menu"
+
+      sx={{ mr: 2 }}
+
+      onClick={HandleDrawer1}
+
+      title='icon2'
+
+     >
+
+      <Menu />
+
+     </IconButton>}
+
+     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+
+      MY APP
+
+     </Typography>
+
+     <Button color="inherit" onClick={HandleClick}>Sign Out</Button>
+
+    </Toolbar>
+
+   </AppBar>
+
+   <div>
+
+    <Container sx={{marginTop:2}}>
+
+    <main>
+
+      <div>
+
+        {children}
+
+      </div>
+
+    </main>
+
+   </Container>
+
+   </div>
+
+  </Box>
+
+  </div>
+
+ )
+
+}
+
+
+
+export default Navbar
+
+
+
+8, SignIn
+
+
+
+import { Close } from '@mui/icons-material';
+
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from '@mui/material';
+
+import { useFormik } from 'formik';
+
+import React from 'react';
+
+
+
+
+
+
+
+const SignIn = ({opens,setOpens,setShow1,setShow}) => {
+
+   
+
+  const formik = useFormik({
+
+    initialValues:{
+
+      username:"",
+
+      password:""
+
+    },
+
+    validate:(values)=>{
+
+      let errors = {}
+
+      if(!values.username){
+
+        errors.username = "username is required"
+
+      }
+
+      if(!values.password){
+
+        errors.password = "username is required"
+
+      }
+
+       
+
+      return errors;
+
+    },
+
+    onSubmit:(values)=>{
+
+      console.log(values)
+
+      formik.resetForm()
+
+      setOpens(false)
+
+      setShow1(false)
+
+      setShow(true)
+
+      alert("sucess")
+
+    }
+
+  })
+
+  // const[values,setValues]=useState({
+
+  // username:"",
+
+  // password:""
+
+  // })
+
+
+
+  // const HandleChange =(e)=>{
+
+  // const {name,value} = e.target;
+
+  // setValues({
+
+  // ...values,
+
+  // [name]:value
+
+  // })
+
+  // }
+
+
+
+   
+
+  // const HandleClick =()=>{
+
+  // setOpens(false)
+
+  // setShow1(false)
+
+  // setShow(true)
+
+  // alert("sucess")
+
+  // }
+
+
+
+  const HandleClose =()=>{
+
+    setOpens(false)
+
+    formik.resetForm()
+
+  }
+
+   
+
+ return (
+
+  <div>
+
+   <Box>
+
+    <Dialog open={opens} maxWidth={'xs'} fullWidth >
+
+      <DialogTitle>
+
+        <Typography variant='h3'>
+
+          <center>SIGN IN</center>
+
+        </Typography>
+
+        <IconButton 
+
+          sx={{ position: 'absolute',right: 10,top: 10,}}
+
+          onClick={HandleClose}
+
+        >
+
+          <Close/>
+
+        </IconButton>
+
+      </DialogTitle>
+
+      <form autoComplete='off' onSubmit={formik.handleSubmit}>
+
+        <DialogContent>
+
+          <DialogContentText>
+
+            <TextField 
+
+              type='text'
+
+              label="UserName"
+
+              name='username'
+
+              value={formik.values.username}
+
+              onChange={formik.handleChange}
+
+              margin='dense'
+
+              fullWidth
+
+            >
+
+            </TextField>
+
+            {formik.errors.username ? <Typography variant='body1' color="error">{formik.errors.username}</Typography>:null}
+
+            <br></br>
+
+            <TextField 
+
+              type='text'
+
+              label="Password"
+
+              name='password'
+
+              value={formik.values.password}
+
+              onChange={formik.handleChange}
+
+              margin='dense'
+
+              fullWidth
+
+            >
+
+            </TextField>
+
+            {formik.errors.password ? <Typography variant='body1' color="error">{formik.errors.password}</Typography>:null}
+
+          </DialogContentText>
+
+        </DialogContent>
+
+        <DialogActions>
+
+          <Button variant='contained' type='submit'>SIGN IN</Button>
+
+        </DialogActions>
+
+      </form>
+
+    </Dialog>
+
+   </Box>
+
+  </div>
+
+ )
+
+}
+
+
+
+export default SignIn
+
+
+
+9, SignOut
+
+
+
+import { Close } from '@mui/icons-material';
+
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from '@mui/material';
+
+import axios from 'axios';
+
+import { useFormik } from 'formik';
+
+import React from 'react'
+
+
+
+
+
+const SignOut = ({opens1,setOpens1}) => {
+
+  const formik = useFormik({
+
+    initialValues:{
+
+      username:"",
+
+      password:"",
+
+      cnfpassword:""
+
+    },
+
+    validate:(values)=>{
+
+      let errors = {}
+
+
+
+      if(values.username === ""){
+
+        errors.username = "user name is required"
+
+      }
+
+      if(!values.password){
+
+        errors.password = "password is required"
+
+      }
+
+      if(values.password === values.cnfpassword){
+
+        errors.cnfpassword = "confirm password and password must be same is required"
+
+      }
+
+       
+
+      return errors;
+
+    },
+
+    onSubmit:(values)=>{
+
+      const {username,password} = formik.values
+
+      console.log(values)
+
+      axios.post("http://localhost:8000/users",{username:username,password:password}).then((resp)=>console.log(resp.data))
+
+      formik.resetForm()
+
+      setOpens1(false)
+
+    }
+
+  })
+
+  // const[values,setValues]=useState({
+
+  // username:"",
+
+  // password:"",
+
+  // cnfpassword:""
+
+  // })
+
+
+
+  // const HandleChange =(e)=>{
+
+  // const {name,value} = e.target;
+
+  // setValues({
+
+  // ...values,
+
+  // [name]:value
+
+  // })
+
+  // }
+
+
+
+  const HandleClose =()=>{
+
+    setOpens1(false)
+
+    formik.resetForm()
+
+  }
+
+
+
+  
+
+
+
+ return (
+
+  <div>
+
+   <Box>
+
+    <Dialog open={opens1} maxWidth={'xs'} fullWidth >
+
+      <DialogTitle>
+
+        <Typography variant='h3'>
+
+          <center>SIGN IN</center>
+
+        </Typography>
+
+        <IconButton 
+
+          sx={{ position: 'absolute',right: 10,top: 10,}}
+
+          onClick={HandleClose}
+
+        >
+
+          <Close/>
+
+        </IconButton>
+
+      </DialogTitle>
+
+      <form autoComplete='off' onSubmit={formik.handleSubmit}>
+
+        <DialogContent>
+
+          <DialogContentText>
+
+            <TextField 
+
+              type='text'
+
+              label="UserName"
+
+              name='username'
+
+              value={formik.values.username}
+
+              onChange={formik.handleChange}
+
+              margin='dense'
+
+              fullWidth
+
+            >
+
+            </TextField>
+
+            {formik.errors.username ? <Typography variant='body1' color="error">{formik.errors.username}</Typography>:null}
+
+            <br></br>
+
+            <TextField 
+
+              type='text'
+
+              label="Password"
+
+              name='password'
+
+              value={formik.values.password}
+
+              onChange={formik.handleChange}
+
+              margin='dense'
+
+              fullWidth
+
+            >
+
+            </TextField>
+
+            {formik.errors.password ? <Typography variant='body1' color="error">{formik.errors.password}</Typography>:null}
+
+            <br></br>
+
+            <TextField 
+
+              type='text'
+
+              label="Confirm Password"
+
+              name='cnfpassword'
+
+              value={formik.values.cnfpassword}
+
+              onChange={formik.handleChange}
+
+              margin='dense'
+
+              fullWidth
+
+            >
+
+            </TextField>
+
+            {formik.errors.cnfpassword ? <Typography variant='body1' color="error">{formik.errors.cnfpassword}</Typography>:null}
+
+          </DialogContentText>
+
+        </DialogContent>
+
+        <DialogActions>
+
+          <Button variant='contained' type='submit'>SIGN UP</Button>
+
+        </DialogActions>
+
+      </form>
+
+    </Dialog>
+
+   </Box>
+
+  </div>
+
+ )
+
+}
+
+
+
+export default SignOut
+
+
+
+10, Timer
+
+
+
+import { Box, Paper,} from '@mui/material'
+
+import React, { useState } from 'react'
+
+
+
+const Timer = () => {
+
+  const CurrentTime = new Date().toLocaleTimeString()
+
+  const[time,setTime]=useState(CurrentTime)
+
+
+
+  setInterval(()=>{
+
+    setTime(new Date().toLocaleTimeString())
+
+  },1000)
+
+ return (
+
+  <Box >
+
+    <Paper elevation={2}>
+
+      <center><h1>Cureent Time : {time}</h1></center>
+
+    </Paper>
+
+  </Box>
+
+ )
+
+}
+
+
+
+export default Timer
+
+
+
+11, redux/store
+
+
+
+import { configureStore } from "@reduxjs/toolkit";
+
+import UserSlice from "./UserSlice";
+
+
+
+
+
+const Store = configureStore({
+
+  reducer:{
+
+    user:UserSlice,
+
+  }
+
+}) 
+
+
+
+export default Store;
+
+
+
+12, redux/userslice
+
+
+
+import { createSlice } from "@reduxjs/toolkit";
+
+
+
+const initialState = {
+
+  user:[]
+
+};
+
+
+
+const UserSlice = createSlice({
+
+  name:"User",
+
+  initialState,
+
+  reducers:{
+
+    GetData:(state,action)=>{
+
+      state.user.push(action.payload)
+
+    }
+
+  }
+
+})
+
+
+
+export const {GetData} = UserSlice.actions;
+
+export default UserSlice.reducer;
+
+
+
+13, App.js
+
+
+
+// import {
+
+// Route,
+
+// Routes,
+
+// BrowserRouter
+
+// } from "react-router-dom";
+
+// import Navbar from "./Components/Navbar";
+
+// import About from "./Components/About";
+
+// import CrudApp from "./Components/CrudApp";
+
+// import Home from "./Components/Home";
+
+// import Timer from "./Components/Timer";
+
+// import Add from "./Components/Add";
+
+import HomeNav from "./Components/HomeNav";
+
+import { useSelector } from "react-redux";
+
+import image from "./Images/logo.jpeg"
+
+import { useState } from "react";
+
+// const router = createBrowserRouter(
+
+// createRoutesFromElements(
+
+// <Route path="/" element={<Navbar/>}>
+
+// <Route path="Home" element={<Home/>} loader={data}/>
+
+// <Route path="Timer" element={<Timer/>}/>
+
+// <Route path="About" element={<About/>}/>
+
+// <Route path="CrudApp" element={<CrudApp/>}/>
+
+// </Route>
+
+// )
+
+
+
+// )
+
+
+
+function App() {
+
+ const data = useSelector((state)=>state.user)
+
+ console.log(data)
+
+ const[img,setImg]=useState(true)
+
+  
+
+ return (
+
+  <div className="App">
+
+   <HomeNav setImg={setImg}/>
+
+   {
+
+    img && 
+
+    <center>
+
+     <img src={image} alt='' width={1300} height={500} style={{display:"flex"}}></img>
+
+    </center>
+
+   }
+
+
+
+   {/* <RouterProvider router={router}/> */}
+
+   {/* <BrowserRouter> */}
+
+    {/* <Navbar>
+
+     <Routes>
+
+      <Route path="Home" element={<Home />} />
+
+      <Route path="Timer" element={<Timer />} />
+
+      <Route path="About" element={<About />} />
+
+      <Route path="CrudApp" element={<CrudApp />} />
+
+      <Route path="Add" element={<Add />} />
+
+     </Routes>
+
+    </Navbar> */}
+
+   {/* </BrowserRouter> */}
+
+
+
+  </div>
+
+ );
+
+}
+
+
+
+export default App;
+
+
+
+14, index
+
+
+
+import React from 'react';
+
+import ReactDOM from 'react-dom/client';
+
+import App from './App';
+
+import Store from './redux/store';
+
+import { Provider } from 'react-redux';
+
+
+
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+
+ <React.StrictMode>
+
+   <Provider store={Store}>
+
+    <App />
+
+   </Provider>
+
+ </React.StrictMode>
+
+);
+
+
+
+
+
+                                             
+
+
+
