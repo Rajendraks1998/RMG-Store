@@ -10,6 +10,7 @@ public interface ProductService {
     String update(Product product);
     List<Product> findAll();
     String delete(Long productId);
+    List<Product> findProductByUser(Long userId);
 
 //    String validateProduct(Product product);
 

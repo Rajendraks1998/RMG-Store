@@ -29,8 +29,6 @@ public class ProductController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(ConstantsEnum.PRODUCT_ALREADY_EXISTS.getValue(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
     @PutMapping("/update")
@@ -51,6 +49,11 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Long productId){
         return new ResponseEntity<>(productService.delete(productId), HttpStatus.OK);
+    }
+
+    @GetMapping("findProductByUser/{id}")
+    public ResponseEntity<List<Product>> findProductByUser(@PathVariable("id") Long userId){
+       return  new ResponseEntity<>(productService.findProductByUser(userId),HttpStatus.OK);
     }
 }
 

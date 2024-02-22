@@ -2,8 +2,10 @@ package org.rmgstore.serviceimpl;
 
 import org.rmgstore.enums.ConstantsEnum;
 import org.rmgstore.model.Product;
+import org.rmgstore.model.User;
 import org.rmgstore.repository.ProductRepository;
 import org.rmgstore.service.ProductService;
+import org.rmgstore.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER= LoggerFactory.getLogger(ProductService.class);
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Product save(Product product)  {
@@ -56,6 +61,12 @@ public String delete(Long productId) {
     productRepository.deleteById(productId);
     return ConstantsEnum.DELETED_SUCCESSFULLY.getValue();
 }
+
+    @Override
+    public List<Product> findProductByUser(Long userId) {
+        Optional<User> user=userService.findById(userId);
+        return user.map(value -> productRepository.findProductsByUser(value)).orElse(null);
+    }
 
 //    @Override
 //    public String validateProduct(Product product) {

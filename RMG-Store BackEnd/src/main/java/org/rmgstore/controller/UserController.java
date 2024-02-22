@@ -2,12 +2,14 @@ package org.rmgstore.controller;
 
 import org.rmgstore.dto.UserDto;
 import org.rmgstore.enums.ConstantsEnum;
+import org.rmgstore.exceptions.UserNotFoundException;
 import org.rmgstore.model.User;
 import org.rmgstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -54,6 +56,14 @@ public class UserController {
         String result=userService.delete(userId);
         return new ResponseEntity<>(result,HttpStatus.OK);
 
+    }
+
+    @GetMapping("findById/{id}")
+    public ResponseEntity<User> findById(@PathVariable("id") Long userId)  {
+
+            User user = userService.findById(userId)
+                    .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,ConstantsEnum.USERID_DOES_NOT_EXISTS.getValue()));
+            return ResponseEntity.ok(user);
     }
 
 }

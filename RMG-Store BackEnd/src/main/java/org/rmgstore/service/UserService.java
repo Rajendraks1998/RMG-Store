@@ -5,6 +5,7 @@ import org.rmgstore.exceptions.UserNotFoundException;
 import org.rmgstore.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     User login(UserDto userDto);
@@ -13,4 +14,6 @@ public interface UserService {
     String delete(Long userId);
     List<User> findAll();
     String validateUser(User user);
+
+    Optional<User> findById(Long userId) ;
 }
