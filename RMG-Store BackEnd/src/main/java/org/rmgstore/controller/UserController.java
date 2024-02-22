@@ -32,14 +32,14 @@ public class UserController {
         String existingUser = userService.validateUser(user);
         if(existingUser == null){
             userService.add(user);
-            return new ResponseEntity<>(ConstantsEnum.USER_CREATED_SUCCESSFULLY.getValue(), HttpStatus.OK);
+            return new ResponseEntity<>(ConstantsEnum.CREATED_SUCCESSFULLY.getValue(), HttpStatus.OK);
         }
         return new ResponseEntity<>(existingUser, HttpStatus.NOT_FOUND);
     }
     @PutMapping("/update")
     public ResponseEntity<String> update(@RequestBody User user){
         String result = userService.update(user);
-        if(result.equals(ConstantsEnum.USER_UPDATED_SUCCESSFULLY.getValue()))
+        if(result.equals(ConstantsEnum.UPDATED_SUCCESSFULLY.getValue()))
             return new ResponseEntity<>(result,HttpStatus.OK);
         else
             return new ResponseEntity<>(result,HttpStatus.NOT_FOUND);
@@ -49,8 +49,11 @@ public class UserController {
         return userService.findAll();
     }
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long userId){
-        return userService.delete(userId);
+    public ResponseEntity<String> delete(@PathVariable("id") Long userId){
+
+        String result=userService.delete(userId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+
     }
 
 }

@@ -1,6 +1,7 @@
 package org.rmgstore.service;
 
 import org.rmgstore.dto.UserDto;
+import org.rmgstore.exceptions.UserNotFoundException;
 import org.rmgstore.model.User;
 
 import java.util.List;

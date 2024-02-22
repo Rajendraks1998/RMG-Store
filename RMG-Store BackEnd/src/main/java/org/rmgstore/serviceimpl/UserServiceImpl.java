@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
                 existingUser=validateUser(user2);
                 if(existingUser==null){
                     userRepository.save(user2);
-                    return ConstantsEnum.USER_UPDATED_SUCCESSFULLY.getValue();
+                    return ConstantsEnum.UPDATED_SUCCESSFULLY.getValue();
                 }
                 else {
                     return existingUser;
@@ -78,9 +78,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String delete(Long userId) {
-        userRepository.deleteById(userId);
-        return "User deleted Successfully";
+    public String delete(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        try {
+            if(user.isPresent()) {
+                userRepository.deleteById(userId);
+
+            } else {
+                throw new UserNotFoundException("UserId doesn't exists");
+            }
+        }catch(UserNotFoundException e){
+            LOGGER.error("Exception occurred while deleting the user: {}",e.getMessage());
+        }
+        return ConstantsEnum.DELETED_SUCCESSFULLY.getValue();
+
+
     }
 
     @Override
