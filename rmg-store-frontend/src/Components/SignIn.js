@@ -65,7 +65,7 @@ const SignIn = () => {
                 <p>{errors.username?.message}</p>
                 <br></br>
                 <TextField
-                  type='text'
+                  type='password'
                   label="Password"
                   {...register("password", { required: "this field is required" })}
 
