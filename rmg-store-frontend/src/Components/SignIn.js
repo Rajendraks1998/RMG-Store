@@ -6,11 +6,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+
 const SignIn = () => {
   const [open, setOpen] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const win = window.sessionStorage;
+  // const win = window.sessionStorage;
 
   let history = useNavigate();
 
@@ -35,6 +36,7 @@ const SignIn = () => {
     await axios.post(url, { user: data.username, password: data.password }).then((resp) => HandlePath(resp.status, resp.data)).catch((err) => HandlePath(err.response.status, err.response.data))
 
   }
+
   return (
     <div>
       <Box>

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink,} from 'react-router-dom';
 import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors } from '@mui/material';
-import { Home, Menu } from '@mui/icons-material';
-import InfoIcon from '@mui/icons-material/Info';
+import {  Menu } from '@mui/icons-material';
+// import InfoIcon from '@mui/icons-material/Info';
 // import { Add } from '@mui/icons-material';
 // import AppsIcon from '@mui/icons-material/Apps';
 // import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { useNavigate } from 'react-router-dom';
 import image from "../Images/logo2.jpeg";
 import { Outlet } from 'react-router-dom';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import CategoryIcon from '@mui/icons-material/Category';
+// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar = ({children,setShow,setShow1,setImg}) => {
   const[icon1,setIcon1]=useState(true)
@@ -34,7 +37,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     {
       name:"Profile",
       path:"user/profile",
-      icon:<Home color="primary"/>,
+      icon:<AccountBoxIcon color="primary"/>,
       title:"To Profile Page"
     },
     // {
@@ -59,7 +62,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     {
       name:"Products",
       path:"user/products",
-      icon:<InfoIcon color="primary"/>,
+      icon:<CategoryIcon color="primary"/>,
       title:"To About Page"
     }
 
@@ -76,6 +79,10 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     setIcon1(true)
     setIcon2(false)
   }
+
+  // const HandleCricle =()=>{
+  //   console.log("HI")
+  // }
 
   // const HandleOver =()=>{
   // setWidth(170)
@@ -159,6 +166,12 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
       RMG STORES
      </Typography>
+     {/* <Tooltip title="Profile">
+      <Button color='inherit' onClick={HandleClick}>
+        <AccountCircleIcon color='inherit'/>
+      </Button>
+     </Tooltip> */}
+    
      <Button color="inherit" onClick={HandleClick}>Sign Out</Button>
     </Toolbar>
    </AppBar>
