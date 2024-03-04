@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { NavLink,} from 'react-router-dom';
-import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors } from '@mui/material';
-import { Home, Menu } from '@mui/icons-material';
-import InfoIcon from '@mui/icons-material/Info';
+import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors} from '@mui/material';
+import {  Menu } from '@mui/icons-material';
+// import InfoIcon from '@mui/icons-material/Info';
 // import { Add } from '@mui/icons-material';
 // import AppsIcon from '@mui/icons-material/Apps';
 // import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { useNavigate } from 'react-router-dom';
 import image from "../Images/logo2.jpeg";
 import { Outlet } from 'react-router-dom';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import CategoryIcon from '@mui/icons-material/Category';
+// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Badge from '@mui/material/Badge';
+import {  useSelector } from 'react-redux'
+
+
 
 const Navbar = ({children,setShow,setShow1,setImg}) => {
+  const user = useSelector((state)=>state.user.user)
   const[icon1,setIcon1]=useState(true)
   const[icon2,setIcon2]=useState(false)
   const[width,setWidth]=useState(60)
@@ -34,7 +43,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     {
       name:"Profile",
       path:"user/profile",
-      icon:<Home color="primary"/>,
+      icon:<AccountBoxIcon color="primary"/>,
       title:"To Profile Page"
     },
     // {
@@ -59,7 +68,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     {
       name:"Products",
       path:"user/products",
-      icon:<InfoIcon color="primary"/>,
+      icon:<CategoryIcon color="primary"/>,
       title:"To About Page"
     }
 
@@ -77,6 +86,10 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
     setIcon2(false)
   }
 
+  // const HandleCricle =()=>{
+  //   console.log("HI")
+  // }
+
   // const HandleOver =()=>{
   // setWidth(170)
   // }
@@ -86,11 +99,16 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
   // }
 
   const HandleClick =()=>{
+  
+  
    history("/")
+   history(0);
   //  setShow(false)
   //  setShow1(true)
   //  setImg(true)
   }
+
+  
 
  return (
   <div style={{display:'flex'}}>
@@ -121,8 +139,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
           {text.icon}
          </ListItemIcon>
         </Tooltip>
-        <ListItemText primary={<NavLink className={({isActive})=>{ return isActive ? colors.pink : colors.red
-        }} to={text.path}>{text.name}</NavLink>} />
+        <ListItemText primary={<NavLink style={{color:"#3383FF",textDecoration: 'none'}} to={text.path}>{text.name}</NavLink>} />
        </ListItemButton>
       </ListItem>
      ))}
@@ -159,7 +176,24 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
       RMG STORES
      </Typography>
-     <Button color="inherit" onClick={HandleClick}>Sign Out</Button>
+     {/* <Tooltip title="Profile">
+      <Button color='inherit' onClick={HandleClick}>
+        <AccountCircleIcon color='inherit'/>
+      </Button>
+     </Tooltip> */}
+  
+     <Tooltip title="Cart Items">
+        <NavLink to={"cart"} style={{color:"white"}}>
+          <IconButton color='inherit'>
+            <Badge badgeContent={user.length} color='secondary'>
+              <ShoppingCartOutlinedIcon sx={{fontSize:40}}></ShoppingCartOutlinedIcon>
+            </Badge>
+          </IconButton>
+        </NavLink>
+     </Tooltip>
+
+     <Button color="inherit" sx={{marginLeft:3}} variant='outlined' onClick={HandleClick}>Sign Out</Button>
+     
     </Toolbar>
    </AppBar>
    <div>
