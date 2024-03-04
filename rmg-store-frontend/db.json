@@ -29,19 +29,22 @@
       "id": "1",
       "name": "ice-cream",
       "price": 200,
+      "qty": 0,
       "date": "Sep 12 2023"
     },
     {
-      "id": "aabd",
-      "name": "rice",
-      "price": 20,
-      "date": "2024-02-09"
+      "id": "92f9",
+      "name": "Rice bath",
+      "price": 25,
+      "qty": 0,
+      "date": "2024-03-13"
     },
     {
-      "id": "bec7",
-      "name": "curd",
-      "price": 10,
-      "date": "2024-02-09"
+      "id": "aefb",
+      "name": "Curd Rice",
+      "price": 23,
+      "qty": 0,
+      "date": "2024-03-06"
     }
   ]
 }

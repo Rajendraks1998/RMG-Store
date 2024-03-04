@@ -5,11 +5,16 @@ import { useState } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { GetUserData } from '../redux/UserDataSlice';
 
 
 const SignIn = () => {
   const [open, setOpen] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+
+  const dispatch = useDispatch();
 
   // const win = window.sessionStorage;
 
@@ -18,12 +23,14 @@ const SignIn = () => {
   const url = "http://localhost:8080/user/login";
 
   const HandlePath = (resp, data) => {
-    console.log(resp)
+    
     if (resp === 200) {
-      alert(data)
+
+      dispatch(GetUserData(data))
+      alert("User Logged in Successfully")
       return history("/user/profile")
     } else {
-      alert(data)
+      alert("Please Check your credentials")
       return history("/")
     }
   }
@@ -33,7 +40,7 @@ const SignIn = () => {
     history("/")
   }
   const HandleSubmit = async (data) => {
-    await axios.post(url, { user: data.username, password: data.password }).then((resp) => HandlePath(resp.status, resp.data)).catch((err) => HandlePath(err.response.status, err.response.data))
+    await axios.post(url, { user: data.username, password: data.password }).then((response) => HandlePath(response.status, response.data)).catch((err) => HandlePath(err.response.status, err.response.data))
 
   }
 

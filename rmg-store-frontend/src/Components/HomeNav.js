@@ -34,8 +34,8 @@ const HomeNav = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             MY APP
           </Typography>
-          <Button color="inherit" onClick={HandleSignIn}>Sign In</Button>
-          <Button color="inherit" onClick={HandleSignUp}>Sign Up</Button>
+          <Button style={{marginRight:3}} color="inherit" variant='outlined' onClick={HandleSignIn}>Sign In</Button>
+          <Button color="inherit" variant='outlined' onClick={HandleSignUp}>Sign Up</Button>
         </Toolbar>
       </AppBar>
       <br/>

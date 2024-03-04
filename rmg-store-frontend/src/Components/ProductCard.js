@@ -1,13 +1,29 @@
 import { Box, Button, ButtonGroup, Container, Divider, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { GetQty } from '../redux/UserSlice';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
-const ProductCard = ({ name, price,HandleAddItems,id }) => {
+
+const ProductCard = ({ name, price,HandleAddItems,id , date }) => {
+    const dispatch = useDispatch();
     const [btn, setBtn] = useState(true);
     const [btn1, setBtn1] = useState(false);
-    const [btnvalue, setBtnValue] = useState(1);
+    const [btnvalue, setBtnValue] = useState(0);
+
+    
+
+    useEffect(()=>{
+        axios.put(`http://localhost:8000/products/${id}`,{id:id,name:name,price:price,qty:btnvalue,date:date})
+    })
+
+    
 
     const HandleIncrement = () => {
         setBtnValue(btnvalue => btnvalue + 1);
+        
+        dispatch(GetQty(btnvalue))
+
     }
 
     const HandleDecrement = () => {
@@ -15,8 +31,12 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
         if (btnvalue <= 1) {
             setBtn(true)
             setBtn1(false)
-            setBtnValue(1);
+            setBtnValue(0);
         }
+        dispatch(GetQty(btnvalue))
+       
+
+
     }
 
     const HandleButton = (id) => {
@@ -43,9 +63,9 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
                         }
                         {
                             btn1 && <ButtonGroup>
-                                <Button variant='outlined' onClick={HandleDecrement}>-</Button>
+                                <Button variant='outlined' onClick={()=>HandleDecrement(id)}>-</Button>
                                 <Button variant='outlined'>{btnvalue}</Button>
-                                <Button variant='outlined' onClick={HandleIncrement}>+</Button>
+                                <Button variant='outlined' onClick={()=>HandleIncrement(id)}>+</Button>
                             </ButtonGroup>
                         }
                     </Container>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink,} from 'react-router-dom';
-import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors } from '@mui/material';
+import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, colors} from '@mui/material';
 import {  Menu } from '@mui/icons-material';
 // import InfoIcon from '@mui/icons-material/Info';
 // import { Add } from '@mui/icons-material';
@@ -12,8 +12,14 @@ import { Outlet } from 'react-router-dom';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import CategoryIcon from '@mui/icons-material/Category';
 // import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Badge from '@mui/material/Badge';
+import {  useSelector } from 'react-redux'
+
+
 
 const Navbar = ({children,setShow,setShow1,setImg}) => {
+  const user = useSelector((state)=>state.user.user)
   const[icon1,setIcon1]=useState(true)
   const[icon2,setIcon2]=useState(false)
   const[width,setWidth]=useState(60)
@@ -93,11 +99,16 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
   // }
 
   const HandleClick =()=>{
+  
+  
    history("/")
+   history(0);
   //  setShow(false)
   //  setShow1(true)
   //  setImg(true)
   }
+
+  
 
  return (
   <div style={{display:'flex'}}>
@@ -128,8 +139,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
           {text.icon}
          </ListItemIcon>
         </Tooltip>
-        <ListItemText primary={<NavLink className={({isActive})=>{ return isActive ? colors.pink : colors.red
-        }} to={text.path}>{text.name}</NavLink>} />
+        <ListItemText primary={<NavLink style={{color:"#3383FF",textDecoration: 'none'}} to={text.path}>{text.name}</NavLink>} />
        </ListItemButton>
       </ListItem>
      ))}
@@ -171,8 +181,19 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
         <AccountCircleIcon color='inherit'/>
       </Button>
      </Tooltip> */}
-    
-     <Button color="inherit" onClick={HandleClick}>Sign Out</Button>
+  
+     <Tooltip title="Cart Items">
+        <NavLink to={"cart"} style={{color:"white"}}>
+          <IconButton color='inherit'>
+            <Badge badgeContent={user.length} color='secondary'>
+              <ShoppingCartOutlinedIcon sx={{fontSize:40}}></ShoppingCartOutlinedIcon>
+            </Badge>
+          </IconButton>
+        </NavLink>
+     </Tooltip>
+
+     <Button color="inherit" sx={{marginLeft:3}} variant='outlined' onClick={HandleClick}>Sign Out</Button>
+     
     </Toolbar>
    </AppBar>
    <div>

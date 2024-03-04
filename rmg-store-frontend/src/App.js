@@ -16,6 +16,7 @@ import SignIn from './Components/SignIn';
 import SignOut from './Components/SignOut';
 import Navbar from "./Components/Navbar";
 import Products from "./Components/Products";
+import UserCart from "./Components/UserCart";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                       <Route path="profile" element={<Home />} />
                       {/* <Route path="timer" element={<Timer />} /> */}
                       <Route path="products" element={<Products />} />
+                      <Route path="cart" element={<UserCart/>} />
                       {/* <Route path="crudApp" element={<CrudApp />} /> */}
                       {/* <Route path="add" element={<Add />} /> */}
                       {/* <Route path='view' element={<View/>}/> */}
