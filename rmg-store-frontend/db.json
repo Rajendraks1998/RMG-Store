@@ -16,6 +16,14 @@
       "password": "gani123"
     }
   ],
+  "Adding": [
+    {
+      "id": "1",
+      "name": "gani",
+      "price": 29,
+      "qty": 3
+    }
+  ],
   "billing": [
     {
       "id": "1",
@@ -45,6 +53,27 @@
       "price": 23,
       "qty": 0,
       "date": "2024-03-06"
+    },
+    {
+      "id": "0220",
+      "name": "gani",
+      "price": 23,
+      "qty": 0,
+      "date": "2024-03-07"
+    },
+    {
+      "id": "c7fe",
+      "name": "idli",
+      "price": 30,
+      "qty": 0,
+      "date": "2024-03-15"
+    },
+    {
+      "id": "9d16",
+      "name": "dosa",
+      "price": 35,
+      "qty": 0,
+      "date": "2024-03-13"
     }
   ]
 }

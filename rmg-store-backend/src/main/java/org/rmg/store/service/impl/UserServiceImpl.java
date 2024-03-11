@@ -10,6 +10,7 @@ import org.rmg.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,6 +65,14 @@ public class UserServiceImpl implements UserService {
         user.setEmail(updatedUser.getEmail());
         userRepository.save(user);
 //        return UserMapper.mapToUserDto(user);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto findByNameAndPassword(String name, String password) {
+        User user = userRepository.findByNameAndPassword(name, password).orElseThrow(
+                () -> new ResourceNotFoundException(ConstantsEnum.USER_NOT_EXISTS.getValue()+"username: "+name+" and password: "+password)
+        );
         return modelMapper.map(user, UserDto.class);
     }
 }

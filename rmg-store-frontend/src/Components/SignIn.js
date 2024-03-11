@@ -5,8 +5,8 @@ import { useState } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { GetUserData } from '../redux/UserDataSlice';
+// import { useDispatch } from 'react-redux';
+// import { GetUserData } from '../redux/UserDataSlice';
 
 
 const SignIn = () => {
@@ -14,19 +14,20 @@ const SignIn = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   // const win = window.sessionStorage;
 
   let history = useNavigate();
 
-  const url = "http://localhost:8080/user/login";
+  const url = "http://localhost:8080/auth/login";
 
   const HandlePath = (resp, data) => {
     
     if (resp === 200) {
 
-      dispatch(GetUserData(data))
+      // dispatch(GetUserData(data))
+      sessionStorage.setItem('user',JSON.stringify(data))
       alert("User Logged in Successfully")
       return history("/user/profile")
     } else {
@@ -40,7 +41,7 @@ const SignIn = () => {
     history("/")
   }
   const HandleSubmit = async (data) => {
-    await axios.post(url, { user: data.username, password: data.password }).then((response) => HandlePath(response.status, response.data)).catch((err) => HandlePath(err.response.status, err.response.data))
+    await axios.post(url, { name: data.name, password: data.password }).then((response) => HandlePath(response.status, response.data)).catch((error) => HandlePath(error.response.status, error.response.data))
 
   }
 
@@ -65,7 +66,7 @@ const SignIn = () => {
                 <TextField
                   type='text'
                   label="UserName"
-                  {...register("username", { required: "this field is required" })}
+                  {...register("name", { required: "this field is required" })}
 
                   margin='dense'
                   fullWidth

@@ -6,7 +6,7 @@ import {
     Route,
     Routes,
     BrowserRouter
-   } from "react-router-dom";
+} from "react-router-dom";
 // import CrudApp from "./Components/CrudApp";
 import Home from "./Components/Home";
 // import Timer from "./Components/Timer";
@@ -17,34 +17,38 @@ import SignOut from './Components/SignOut';
 import Navbar from "./Components/Navbar";
 import Products from "./Components/Products";
 import UserCart from "./Components/UserCart";
+import Billing from "./Components/Billing";
 
 
 function App() {
 
- return (
-    
-  <div className="App">
-      <BrowserRouter>
-          <Routes>
-                  <Route exact path="/" element={<HomeNav/>}/>
-                  <Route exact path="user" element={<Navbar />}>
-                      <Route path="profile" element={<Home />} />
-                      {/* <Route path="timer" element={<Timer />} /> */}
-                      <Route path="products" element={<Products />} />
-                      <Route path="cart" element={<UserCart/>} />
-                      {/* <Route path="crudApp" element={<CrudApp />} /> */}
-                      {/* <Route path="add" element={<Add />} /> */}
-                      {/* <Route path='view' element={<View/>}/> */}
+    return (
+
+        <div className="App">
+            <BrowserRouter>
+                <Routes>
+                    <Route exact path="/" element={<HomeNav />} />
+                    
+
+                    <Route exact path="user" element={<Navbar />}>
+                        <Route path="profile" element={<Home />} />
+                        {/* <Route path="timer" element={<Timer />} /> */}
+                        <Route path="products" element={<Products />}>
+                        <Route path="billing" element={<Billing />} />
+                        </Route>
+                        <Route path="cart" element={<UserCart />} />
+
+                        {/* <Route path="crudApp" element={<CrudApp />} /> */}
+                        {/* <Route path="add" element={<Add />} /> */}
+                        {/* <Route path='view' element={<View/>}/> */}
                     </Route>
-                  <Route path="signin" element={<SignIn />} />
-                  <Route path="signup" element={<SignOut />} />
-          </Routes>
-      </BrowserRouter>
-  </div>
- );
+                    <Route path="signin" element={<SignIn />} />
+                    <Route path="signup" element={<SignOut />} />
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
 
 }
-
-
 
 export default App

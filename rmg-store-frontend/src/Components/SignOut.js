@@ -18,7 +18,7 @@ const SignOut = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   let history = useNavigate();
 
-const url = "http://localhost:8080/user/add"
+const url = "http://localhost:8080/api/users"
 
 
   const HandleClose =()=>{
@@ -34,7 +34,7 @@ const url = "http://localhost:8080/user/add"
     
   }
   const HandleSubmit=async(data)=> {
-    await axios.post(url, {name:data.name, store: data.store, address: data.address, emailId: data.emailId, contact: data.contact, password: data.password})
+    await axios.post(url, {name:data.name, store: data.store, address: data.address, email: data.email, contact: data.contact, password: data.password})
     .then((resp)=> HandlePath(resp.data)).catch((err)=> HandlePath(err.response.data))
     history("/")
   }
@@ -120,7 +120,7 @@ const url = "http://localhost:8080/user/add"
 
               label="emailId"
 
-              {...register("emailId", { required: "this field is required" })}
+              {...register("email", { required: "this field is required" })}
 
             
               margin='dense'

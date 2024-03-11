@@ -2,31 +2,39 @@
 // import { Avatar, Card, CardContent, CardHeader, IconButton, Typography } from '@mui/material'
 // import { deepPurple } from '@mui/material/colors'
 import { Box, Container, Divider, Paper, Typography } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+// import axios from 'axios';
+import React from 'react';
 // import { red,blue } from '@mui/material/colors';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
+
 
 const Home = () => {
 
-  const userDetails = useSelector((state) => state.userdata.userData);
+  // const userDetails = useSelector((state) => state.userdata.userData);
 
+  // sessionStorage.setItem('user',JSON.stringify(userDetails[0]));
 
-  const [datas, setDatas] = useState([])
-  const show = false;
+  const userGet = sessionStorage.getItem('user');
+
+  const userGetObject = JSON.parse(userGet);
+
+  
+
+  // const [datas, setDatas] = useState([])
+  // const show = false;
   // const[show,setShow]=useState(false)
   // const[color,setColor]=useState(blue)
 
-  const data = async () => {
-    await axios.get("http://localhost:8000/posts")
-      .then((resp) => setDatas(resp.data))
-  }
+  // const data = async () => {
+  //   await axios.get("http://localhost:7000/posts")
+  //     .then((resp) => setDatas(resp.data))
+  // }
 
-  useEffect(() => {
-    data()
-  }, [])
+  // useEffect(() => {
+  //   data()
+  // }, [])
 
-  console.log(datas);
+  // console.log(datas);
 
   // const HandleDelete =async(id)=>{
   //   await axios.delete(`http://localhost:8000/posts/${id}`)
@@ -76,9 +84,6 @@ const Home = () => {
         <Box fullWidth>
           <Paper elevation={3} sx={{ height: 350, overflow: "hidden" }}>
             <Container sx={{ marginTop: 3 }}>
-              {
-                userDetails.map((item) => {
-                  return (
                     <div>
                       <Typography variant='h4'>
                         User Details
@@ -86,31 +91,28 @@ const Home = () => {
                       <Divider></Divider>
                       <br />
                       <Typography variant='h6'>
-                        UserName : {item.name}
+                        UserName : {userGetObject.name}
                       </Typography>
                       <Divider></Divider>
                       <Typography variant='h6'>
-                        StoreName : {item.store}
+                        StoreName : {userGetObject.store}
                       </Typography>
                       <Divider></Divider>
                       <Typography variant='h6'>
-                        Address : {item.address}
+                        Address : {userGetObject.address}
                       </Typography>
                       <Divider></Divider>
                       <Typography variant='h6'>
-                        Email ID : {item.emailId}
+                        Email ID : {userGetObject.email}
                       </Typography>
                       <Divider></Divider>
                       <Typography variant='h6'>
-                        Contact : {item.contact}
+                        Contact : {userGetObject.contact}
                       </Typography>
                     </div>
-                  );
-                })
-              }
-              {
+              {/* {
                 show && <p>Password :</p>
-              }
+              } */}
 
 
 

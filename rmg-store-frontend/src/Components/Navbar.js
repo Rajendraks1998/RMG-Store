@@ -174,7 +174,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
       <Menu />
      </IconButton>}
      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-      RMG STORES
+      WELCOME TO RMG STORES
      </Typography>
      {/* <Tooltip title="Profile">
       <Button color='inherit' onClick={HandleClick}>

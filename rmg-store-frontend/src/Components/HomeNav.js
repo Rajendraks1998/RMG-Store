@@ -32,7 +32,7 @@ const HomeNav = () => {
             <Menu />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MY APP
+            RMG STORES
           </Typography>
           <Button style={{marginRight:3}} color="inherit" variant='outlined' onClick={HandleSignIn}>Sign In</Button>
           <Button color="inherit" variant='outlined' onClick={HandleSignUp}>Sign Up</Button>

@@ -1,32 +1,55 @@
-import { AppBar, Badge, Button, Toolbar } from '@mui/material'
+import { AppBar, Button, Toolbar } from '@mui/material'
 import axios from 'axios';
 import { Grid, TextField } from '@mui/material';
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ProductCard from './ProductCard';
 import { Box, Container,  Paper, Typography } from '@mui/material';
 import Cart from './Cart';
-import { useDispatch , useSelector } from 'react-redux';
-import { GetData } from '../redux/UserSlice';
+// import {useSelector } from 'react-redux';
+import BillButton from './BillButton';
+import { Outlet } from 'react-router-dom';
+import { UseDispatch, useDispatch } from 'react-redux';
+import { GetBilling } from '../redux/BillingSlice';
+
+
 
 
 
 const Products = () => {
 
-  const user = useSelector((state)=>state.user.user)
-  const userData = useSelector((state)=>state.userdata.userData);
+  // const user = useSelector((state)=>state.user.user)
+  // const userData = useSelector((state)=>state.userdata.userData);
 
-  const dispatch = useDispatch();
   const [datas, setDatas] = useState([]);
   const [products, setProducts] = useState([]);
-  const [noItems, setNoItems] = useState([]);
+  const[adding,setAdding]=useState([])
+  const[updated,setUpadated]=useState([]);
+  const userGet = sessionStorage.getItem('user');
+  
+
+  const dispatch = useDispatch();
+
+  const userObject = JSON.parse(userGet);
+
+  
+  
+
+  useEffect(()=>{
+    axios.get("http://localhost:8080/api/products")
+      .then((resp) => {
+        const products = resp.data;
+        setProducts(products);
+      })
+      .catch((err) => console.log(err))
+  },[])
 
 
   const HandleAddItems = async (id) => {
-    const itemss = await axios.get(`http://localhost:8000/products/${id}`)
-      .then((resp) => dispatch(GetData(resp.data)))
+   await axios.get(`http://localhost:8080/api/products/${id}`)
+      .then((resp) => setAdding([...adding,resp.data]) )
       .catch((err) => console.log(err))
-    setNoItems([...noItems, itemss.data])
+   
   }
 
   const RenderProductCard = products.map((item, i) => {
@@ -37,23 +60,42 @@ const Products = () => {
   const { register, handleSubmit, resetField, formState: { errors } } = useForm();
 
   const HandleSubmit = async (data) => {
-    await axios.post("http://localhost:8080/product/create", { name: data.name, price: Number(data.price), user: userData[0]})
+    console.log(sessionStorage.getItem('user'))
+    await axios.post("http://localhost:8080/api/products", { name: data.name, price: Number(data.price),quantity: 0,user:userObject})
       .then((resp) => setDatas([...datas, resp.data]))
       .catch((err) => console.log(err))
-    await axios.get("http://localhost:8080/product/findall")
-      .then((resp) => setProducts(resp.data))
+    await axios.get("http://localhost:8080/api/products")
+      .then((resp) => {
+        const products = resp.data;
+        setProducts(products);
+      })
       .catch((err) => console.log(err))
     resetField("name");
     resetField("price");
-    console.log(typeof(userData[0].id))
   }
 
-  let sum = 0;
+  const HandleAddingItem =()=>{
+  
+   axios.get(`http://localhost:8080/api/products`).then((resp)=> {
+    const products = resp.data;
+    axios.post('http://localhost:8080/api/billings',{products:products, dateTime:'',totalPrice:0}).then((response) => dispatch(GetBilling(response.data))).catch(error => console.error(error));
+  })
+  
+  //  axios.post('http://localhost:8080/api/billings',{products:products, dateTime:'',totalPrice:0}).then((Response) => console.log(Response.data)).catch(error => console.error(error));
+  // console.log(products)
+  
+  }
 
-  products.map((item) => console.log(sum = sum + item.price))
+  
+  console.log(updated.filter((item)=>item.quantity > 0 ).map(({name,price,quantity})=>({name,price,quantity})))
 
-  console.log(noItems)
-
+  const disabling =()=>{
+    if(updated.length = 0 ){
+      return true
+    }else{
+      return false
+    }
+  }
 
   return (
     <div>
@@ -70,17 +112,17 @@ const Products = () => {
                       margin='dense'
                       fullWidth
                       type='text'
-                      {...register("name", { required: "this is required" })}
+                      {...register("name", { required: "Please Enter Product Name" })}
                     />
-                    <p>{errors.name?.message}</p>
+                    <p style={{color:'red'}}>{errors.name?.message}</p>
                     <TextField
                       placeholder='Enter product price'
                       margin='dense'
                       fullWidth
                       type='number'
-                      {...register("price", { required: "this is required" })}
+                      {...register("price", { required: "Please Enter Product Price" })}
                     />
-                    <p>{errors.price?.message}</p>
+                    <p style={{color:'red'}}>{errors.price?.message}</p>
                     {/* <TextField
                       // placeholder='Enter Name confirmPassword'
                       margin='dense'
@@ -89,7 +131,7 @@ const Products = () => {
                       {...register("date", { required: "Please select date" })}
 
                     />
-                    <p>{errors.price?.message}</p> */}
+                    <p style={{color:'red'}}>{errors.date?.message}</p> */}
                     <Button type='submit' fullWidth variant='contained'>Submit</Button>
                   </form>
                   <br />
@@ -109,11 +151,7 @@ const Products = () => {
         <AppBar position='static'>
           <Toolbar>
           <Typography variant='h4' sx={{ flexGrow: 1,mr:2 }}>Products</Typography>
-          <Badge badgeContent={user.length} color='secondary' >
-            <Button color='inherit' variant='outlined' size='large' onClick={()=>alert("hi")}>
-              Generate Bill
-            </Button>
-          </Badge>
+            <BillButton disabling={disabling} HandleAddingItem={HandleAddingItem} adding={adding}/>
           </Toolbar>
         </AppBar>
       </Box>
@@ -128,7 +166,10 @@ const Products = () => {
           </Paper>
         </Box>
       </div>
-
+      
+      <div>
+        <Outlet/>
+      </div>
     </div>
   )
 }

@@ -1,29 +1,26 @@
 import { Box, Button, ButtonGroup, Container, Divider, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { GetQty } from '../redux/UserSlice';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 
 const ProductCard = ({ name, price,HandleAddItems,id , date }) => {
-    const dispatch = useDispatch();
+    
     const [btn, setBtn] = useState(true);
     const [btn1, setBtn1] = useState(false);
     const [btnvalue, setBtnValue] = useState(0);
 
-    
+    const userGet = sessionStorage.getItem('user');
+
+  const userObject = JSON.parse(userGet);
 
     useEffect(()=>{
-        axios.put(`http://localhost:8000/products/${id}`,{id:id,name:name,price:price,qty:btnvalue,date:date})
+        axios.put(`http://localhost:8080/api/products/${id}`,{id:id,name:name,price:price,quantity:btnvalue,user:userObject})
     })
 
-    
+
 
     const HandleIncrement = () => {
         setBtnValue(btnvalue => btnvalue + 1);
-        
-        dispatch(GetQty(btnvalue))
-
     }
 
     const HandleDecrement = () => {
@@ -33,10 +30,6 @@ const ProductCard = ({ name, price,HandleAddItems,id , date }) => {
             setBtn1(false)
             setBtnValue(0);
         }
-        dispatch(GetQty(btnvalue))
-       
-
-
     }
 
     const HandleButton = (id) => {

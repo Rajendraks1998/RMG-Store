@@ -35,7 +35,7 @@ const UserCart = () => {
                                 <TableRow>
                                   <TableCell>{item.id}</TableCell>
                                   <TableCell>{item.name}</TableCell>
-                                  <TableCell>{qty+1}</TableCell>
+                                  <TableCell>{qty}</TableCell>
                                   <TableCell>{item.price*qty}</TableCell>
                                   <TableCell>
                                     <Button variant='outlined' color='secondary'>X</Button>
