@@ -11,7 +11,9 @@ import org.rmg.store.service.BillingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,18 +29,27 @@ public class BillingServiceImpl implements BillingService {
     public BillingDto createBilling(BillingDto billingDto) {
         Billing billing = new Billing();
         List<Long> productIds = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         for(Product product: billingDto.getProducts()){
-            productIds.add(product.getId());
+            if(product.getQuantity()!=0){
+                products.add(product);
+                productIds.add(product.getId());
+            }
+        }
+        if(products.isEmpty()){
+            return null;
         }
         billing.setProductIds(productIds);
-        billing.setTotalPrice(getTotalPrice(billingDto.getProducts()));
-        billing.setDateTime(LocalDateTime.now());
+        billing.setTotalPrice(getTotalPrice(products));
+        billing.setDate(LocalDate.now());
+        billing.setTime(LocalTime.now());
         Billing savedBilling = billingRepository.save(billing);
 
         BillingDto billingDto1 = new BillingDto();
-        billingDto1.setDateTime(savedBilling.getDateTime());
+        billingDto1.setDate(savedBilling.getDate());
+        billingDto1.setTime(savedBilling.getTime());
         billingDto1.setTotalPrice(savedBilling.getTotalPrice());
-        billingDto1.setProducts(billingDto.getProducts());
+        billingDto1.setProducts(products);
         billingDto1.setId(savedBilling.getId());
         return billingDto1;
     }
@@ -72,7 +83,8 @@ public class BillingServiceImpl implements BillingService {
                 () -> new ResourceNotFoundException(ConstantsEnum.PRODUCT_NOT_EXISTS.getValue()+ billingId)
         );
 //        billing.setProducts(updatedBilling.getProducts());
-        billing.setDateTime(LocalDateTime.now());
+        billing.setDate(LocalDate.now());
+        billing.setTime(LocalTime.now());
         billing.setTotalPrice(getTotalPrice(updatedBilling.getProducts()));
         billingRepository.save(billing);
         return  modelMapper.map(billing,BillingDto.class);

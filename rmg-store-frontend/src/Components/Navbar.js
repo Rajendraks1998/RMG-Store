@@ -102,7 +102,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
   
   
    history("/")
-   history(0);
+  sessionStorage.clear();
   //  setShow(false)
   //  setShow1(true)
   //  setImg(true)
@@ -185,7 +185,7 @@ const Navbar = ({children,setShow,setShow1,setImg}) => {
      <Tooltip title="Cart Items">
         <NavLink to={"cart"} style={{color:"white"}}>
           <IconButton color='inherit'>
-            <Badge badgeContent={user.length} color='secondary'>
+            <Badge badgeContent={user.length} color='inherit'>
               <ShoppingCartOutlinedIcon sx={{fontSize:40}}></ShoppingCartOutlinedIcon>
             </Badge>
           </IconButton>

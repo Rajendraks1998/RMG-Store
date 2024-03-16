@@ -5,12 +5,13 @@ import React, {useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ProductCard from './ProductCard';
 import { Box, Container,  Paper, Typography } from '@mui/material';
-import Cart from './Cart';
+// import Cart from './Cart';
 // import {useSelector } from 'react-redux';
 import BillButton from './BillButton';
 import { Outlet } from 'react-router-dom';
-import { UseDispatch, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { GetBilling } from '../redux/BillingSlice';
+
 
 
 
@@ -24,24 +25,27 @@ const Products = () => {
   const [datas, setDatas] = useState([]);
   const [products, setProducts] = useState([]);
   const[adding,setAdding]=useState([])
-  const[updated,setUpadated]=useState([]);
   const userGet = sessionStorage.getItem('user');
+  const userId = sessionStorage.getItem("userId");
+  
+  
+  
   
 
   const dispatch = useDispatch();
 
   const userObject = JSON.parse(userGet);
 
-  
-  
 
   useEffect(()=>{
-    axios.get("http://localhost:8080/api/products")
+    console.log(userId);
+    axios.get(`http://localhost:8080/api/products/user/${userId}`)
       .then((resp) => {
         const products = resp.data;
         setProducts(products);
       })
       .catch((err) => console.log(err))
+      
   },[])
 
 
@@ -51,6 +55,16 @@ const Products = () => {
       .catch((err) => console.log(err))
    
   }
+
+  
+
+  // const HandleOpens =async()=>{
+  //   setOpen(true);
+  // }
+
+  
+  
+
 
   const RenderProductCard = products.map((item, i) => {
     return <ProductCard key={i} name={item.name} price={item.price} id={item.id} HandleAddItems={HandleAddItems} date={item.date} />
@@ -64,7 +78,7 @@ const Products = () => {
     await axios.post("http://localhost:8080/api/products", { name: data.name, price: Number(data.price),quantity: 0,user:userObject})
       .then((resp) => setDatas([...datas, resp.data]))
       .catch((err) => console.log(err))
-    await axios.get("http://localhost:8080/api/products")
+    await axios.get(`http://localhost:8080/api/products/user/${userId}`)
       .then((resp) => {
         const products = resp.data;
         setProducts(products);
@@ -74,9 +88,11 @@ const Products = () => {
     resetField("price");
   }
 
+  
+
   const HandleAddingItem =()=>{
   
-   axios.get(`http://localhost:8080/api/products`).then((resp)=> {
+   axios.get(`http://localhost:8080/api/products/user/${userId}`).then((resp)=> {
     const products = resp.data;
     axios.post('http://localhost:8080/api/billings',{products:products, dateTime:'',totalPrice:0}).then((response) => dispatch(GetBilling(response.data))).catch(error => console.error(error));
   })
@@ -87,22 +103,14 @@ const Products = () => {
   }
 
   
-  console.log(updated.filter((item)=>item.quantity > 0 ).map(({name,price,quantity})=>({name,price,quantity})))
-
-  const disabling =()=>{
-    if(updated.length = 0 ){
-      return true
-    }else{
-      return false
-    }
-  }
+  
 
   return (
     <div>
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={8}>
-            <Box>
+          <Grid item xs={12}>
+            <Box fullWidth>
               <Paper elevation={3}>
                 <br />
                 <Container>
@@ -140,9 +148,9 @@ const Products = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Cart />
-          </Grid>
+          </Grid> */}
 
         </Grid>
       </div>
@@ -151,7 +159,7 @@ const Products = () => {
         <AppBar position='static'>
           <Toolbar>
           <Typography variant='h4' sx={{ flexGrow: 1,mr:2 }}>Products</Typography>
-            <BillButton disabling={disabling} HandleAddingItem={HandleAddingItem} adding={adding}/>
+            <BillButton HandleAddingItem={HandleAddingItem} adding={adding} />
           </Toolbar>
         </AppBar>
       </Box>
@@ -165,6 +173,7 @@ const Products = () => {
             </Container>
           </Paper>
         </Box>
+        
       </div>
       
       <div>

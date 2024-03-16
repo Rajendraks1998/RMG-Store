@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.rmg.store.entity.Product;
 import org.rmg.store.entity.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,8 @@ import java.util.List;
 public class BillingDto {
     private Long id;
     private List<Product> products;
-    private LocalDateTime dateTime;
+    private LocalDate date;
+    private LocalTime time;
     private Double totalPrice;
 
 }

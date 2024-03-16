@@ -19,7 +19,11 @@ public class BillingController {
 
     @PostMapping
     public ResponseEntity<BillingDto> createBilling(@RequestBody BillingDto billingDto){
+
         BillingDto billing1 = billingService.createBilling(billingDto);
+        if(billing1==null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(billing1, HttpStatus.CREATED);
     }
 

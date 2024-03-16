@@ -38,7 +38,7 @@ const HomeNav = () => {
           <Button color="inherit" variant='outlined' onClick={HandleSignUp}>Sign Up</Button>
         </Toolbar>
       </AppBar>
-      <br/>
+    
       <div>
         <img src={image} alt='' width="100%" height={575} ></img>
       </div>

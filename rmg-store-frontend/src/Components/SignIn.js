@@ -1,10 +1,11 @@
 import { Close } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useState } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import image from "../Images/logo.jpeg";
 // import { useDispatch } from 'react-redux';
 // import { GetUserData } from '../redux/UserDataSlice';
 
@@ -25,7 +26,7 @@ const SignIn = () => {
   const HandlePath = (resp, data) => {
     
     if (resp === 200) {
-
+      sessionStorage.setItem("userId", data.id);
       // dispatch(GetUserData(data))
       sessionStorage.setItem('user',JSON.stringify(data))
       alert("User Logged in Successfully")
@@ -47,10 +48,13 @@ const SignIn = () => {
 
   return (
     <div>
+      <div>
+        <img src={image} alt='' width="100%" height={700} ></img>
+      </div>
       <Box>
         <Dialog open={open} maxWidth={'xs'} fullWidth >
           <DialogTitle>
-            <Typography variant='h3'>
+            <Typography variant='h4'>
               <center>SIGN IN</center>
             </Typography>
             <IconButton
@@ -73,7 +77,7 @@ const SignIn = () => {
                 >
                 </TextField>
                 <p>{errors.username?.message}</p>
-                <br></br>
+                
                 <TextField
                   type='password'
                   label="Password"
@@ -86,6 +90,7 @@ const SignIn = () => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+              <Link style={{marginRight:210,cursor:'pointer'}}>Forgot password</Link>
               <Button variant='contained' type='submit'>SIGN IN</Button>
             </DialogActions>
           </form>

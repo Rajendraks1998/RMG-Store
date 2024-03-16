@@ -29,9 +29,9 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<ProductDto>> getAllProducts(){
-        List<ProductDto> products = productService.getAllProducts();
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ProductDto>> getAllProducts(@PathVariable("id") Long userId){
+        List<ProductDto> products = productService.getAllProducts(userId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
