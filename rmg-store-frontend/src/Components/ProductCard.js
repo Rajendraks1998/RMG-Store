@@ -2,7 +2,8 @@ import { Box, Button, ButtonGroup, Container, Divider, IconButton, Paper, Toolti
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Delete, Edit } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import EditModal from './EditModal';
+import DeleteModal from './DeleteModal';
 
 
 
@@ -12,15 +13,14 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
     const [btn1, setBtn1] = useState(false);
     const [btnvalue, setBtnValue] = useState(0);
     const [color,setColor]=useState("white");
+    const [show,setShow]=useState(false)
+    const [show1,setShow1]=useState(false)
+    const [EditData,setEditData]=useState(null)
 
-    
-
-    let history = useNavigate();
-    
 
     const userGet = sessionStorage.getItem('user');
 
-  const userObject = JSON.parse(userGet);
+    const userObject = JSON.parse(userGet);
 
     useEffect(()=>{
         axios.put(`http://localhost:8080/api/products/${id}`,{id:id,name:name,price:price,quantity:btnvalue,user:userObject})
@@ -54,9 +54,13 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
         HandleAddItems(id);
     }
 
-    const HandleDelete =async(id)=>{
-       await axios.delete(`http://localhost:8080/api/products/${id}`).then((resp)=>console.log(resp.data)).catch((err)=>console.log(err))
-        history(0);
+    const HandleModalOpen =async(id)=>{
+        await axios.get(`http://localhost:8080/api/products/${id}`).then((resp)=>setEditData(resp.data)).catch((err)=>console.log(err))
+        setShow(true)
+    }
+
+    const HandleDelete =()=>{
+        setShow1(true)
     }
 
     
@@ -69,7 +73,7 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
                 <div style={{ backgroundColor: '#0080ff', height: '52px', borderRadius: '3px' }}>
                 <IconButton
                     sx={{ marginLeft:28,marginTop:1 }}
-                    onClick={()=>HandleDelete(id)}
+                    onClick={()=>HandleDelete()}
                     onMouseOver={HandleMouseIn}
                     onMouseOut={HandleMouseOut}
                 >
@@ -79,7 +83,7 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
                 </IconButton>
                 <IconButton
                     sx={{ marginLeft:1,marginTop:1 }}
-                    onClick={()=>alert("Hi")}
+                    onClick={()=>HandleModalOpen(id)}
                     // onMouseOver={HandleMouseIn}
                     // onMouseOut={HandleMouseOut}
                 >
@@ -110,6 +114,17 @@ const ProductCard = ({ name, price,HandleAddItems,id }) => {
                 </Paper>
                 {/* <div style={{ backgroundColor: '#0080ff', height: '20px', marginBottom: '0px', borderRadius: '3px' }}></div> */}
             </Box>
+            <div>
+                {
+                    show && <EditModal setShow={setShow} EditData={EditData} id={id}/>
+                }
+            </div>
+
+            <div>
+                {
+                    show1 && <DeleteModal setShow1={setShow1} id={id}/>
+                }
+            </div>
 
         </div>
     )

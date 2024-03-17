@@ -26,15 +26,17 @@ const UserCart = () => {
       <center>
         <Box sx={{width:1000}}>
             <Paper elevation={3} sx={{height:550}}>
-                <Paper sx={{border:1, height:550, marginTop:2}}>
-                  <AppBar position='static'>
+            <AppBar position='static'>
                     <Toolbar>
                       <Typography variant='h5' sx={{marginTop:2}}>Billing History</Typography><br/>
                       <TextField size='small' color='success' sx={{ flexGrow: 1,mr:2, ml:60  }}type='date'></TextField>
                     </Toolbar>
                     
                   </AppBar>
-                  <br/>
+                  
+                <Paper sx={{border:1, height:550, marginTop:0,overflow:'hidden',overflowY:'scroll'}}>
+                  
+                 
                   <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} >
                       <TableHead>
